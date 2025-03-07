@@ -10,6 +10,7 @@
 #include "Exceptions.h"
 #include "SearchServer.h"
 #include <algorithm>
+#include <unordered_set>
 
 
 using namespace std;
@@ -35,8 +36,10 @@ inline bool checkingFiles (stringstream &buffer) {
 
 inline bool checkingRequests (nlohmann::json &requests) {
   int countRequest = 0;
-  int countWords = 0;
+
+  bool countW = true;
   for(auto& request : requests["requests"]) {
+    int countWords = 0;
     if(request.is_string()) {
       countRequest++;
       stringstream buffer;
@@ -45,15 +48,17 @@ inline bool checkingRequests (nlohmann::json &requests) {
       while(buffer >> word) {
         countWords++;
       }
+      if(countWords >= 1 && countWords <=10) {
+        countW = true;
+      }else countW = false;
     }else cerr << "Invalid request!" << endl;
   }
-  if(countRequest > 1000 && countWords >= 1 && countWords <=10) {
+  if(countRequest < 1000 && countW) {
     return true;
   }else return false;
 }
 inline bool checkingFilesIsOpen(std::ifstream& fileRequests) {
   try {
-    fileRequests.open("requests.json");
     if (!fileRequests.is_open()) {
       throw NoSuchFile();
     }
@@ -63,7 +68,7 @@ inline bool checkingFilesIsOpen(std::ifstream& fileRequests) {
     return false;
   }
 }
-inline vector<string> sorting_queries(vector<string>& words, InvertedIndex& index) {
+inline vector<string> sorting_queries(unordered_set<string>& words, InvertedIndex& index) {
   vector<string> result;
   vector<pair<string,size_t>> queryResult;
 

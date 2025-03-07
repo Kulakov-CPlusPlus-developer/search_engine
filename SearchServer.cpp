@@ -18,20 +18,13 @@ vector<vector<RelativeIndex>> SearchServer::search(const vector<string>& queries
         stringstream ss(query);
         string word;
         vector<string> query_words;
-        vector<string> unique_query_words;
+        unordered_set<string> unique_query_words;
         while(ss >> word) {
+            transform(word.begin(), word.end(), word.begin(), ::tolower);
             query_words.push_back(word);
         }
         for(auto& word1 : query_words) {
-            int count = 0;
-            for(auto& word2 : query_words) {
-                if(word1 == word2) {
-                    count++;
-                    if(count == 1) {
-                        unique_query_words.push_back(word1);
-                    }
-                }
-            }
+            unique_query_words.insert(word1);
         }
         vector<string> sorted_query = sorting_queries(unique_query_words,_index);
         set<size_t> doc_ids;
@@ -105,11 +98,15 @@ vector<vector<RelativeIndex>> SearchServer::search(const vector<string>& queries
                 relative_indices.pop_back();
             }
             results.push_back(relative_indices);
-            for(auto& buffer1 : results) {
-                for(auto& buffer2 : buffer1) {
-                    answers.push_back({pair<int, float>(buffer2.doc_id, buffer2.rank)});
-                }
+            vector<pair<int, float>> answer_for_query;
+            for (const auto& rel_index : relative_indices) {
+                answer_for_query.emplace_back(rel_index.doc_id, rel_index.rank);
             }
+            answers.push_back(answer_for_query);
+        }
+        else {
+            answers.push_back({});
+            results.push_back({});
         }
     }
 

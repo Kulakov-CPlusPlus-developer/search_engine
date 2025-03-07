@@ -86,6 +86,9 @@ const std::vector<vector<RelativeIndex>> expected = {
 {2, 1},
 {0, 0.699999988},
 {1, 0.300000012},
+},
+{
+
 }
 };
 InvertedIndex idx;

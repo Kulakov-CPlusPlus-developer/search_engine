@@ -26,6 +26,7 @@ add_executable(search_engine
         tests.cpp
         InvertedIndex.cpp
         SearchServer.cpp
+        main.cpp
 )
 
 

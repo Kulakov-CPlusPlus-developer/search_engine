@@ -12,7 +12,7 @@ ConverterJSON::~ConverterJSON(){};
 
 vector<string> ConverterJSON::getFiles () {
   cout << "Loading config file..." << std::endl;
-  ifstream configFile;
+  ifstream configFile("config.json");
   if(checkingFilesIsOpen(configFile)) {
     if(configFile.is_open()) {
       try{
@@ -76,15 +76,15 @@ int ConverterJSON::GetResponsesLimit () {
 
 vector<string> ConverterJSON::GetRequests() {
   vector<string> requests;
-  ifstream fileRequests;
+  ifstream fileRequests("requests.json");
   checkingFilesIsOpen(fileRequests);
   nlohmann::json _requests;
   fileRequests >> _requests;
   fileRequests.close();
   try {
     if(_requests.contains("requests") && _requests["requests"].is_array()) {
-      for(auto& request : _requests["requests"]) {
-        if(checkingRequests(_requests)) {
+      if(checkingRequests(_requests)) {
+        for(auto& request : _requests["requests"]) {
           requests.push_back(request);
         }
       }
@@ -107,9 +107,9 @@ void ConverterJSON::putAnswers(std::vector<std::vector<std::pair<int, float>>>an
     nlohmann::json requestObject;
 
     if(answer.empty()) {
+      requestObject["relevance"] = {};
       requestObject["result"] = "false";
     }else {
-      requestObject["result"] = "true";
       nlohmann::json relevanceArray;
       for(auto& result : answer) {
         nlohmann::json resultObject;
@@ -118,8 +118,9 @@ void ConverterJSON::putAnswers(std::vector<std::vector<std::pair<int, float>>>an
         relevanceArray.push_back(resultObject);
       }
       requestObject["relevance"] = relevanceArray;
+      requestObject["result"] = "true";
     }
-    answersObject[requestIndex] = requestObject;
+    answersObject[requestID] = requestObject;
     requestIndex++;
   }
   answersJson["answers"] = answersObject;
