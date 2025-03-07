@@ -39,7 +39,19 @@ vector<vector<RelativeIndex>> SearchServer::search(const vector<string>& queries
             entries.push_back(entry);
         }
         vector<Entry> entries_copy = entries;
-
+        for(auto& word3 : sorted_query) {
+            if(!entries_copy.empty()) {
+                for(auto& entry : entries_copy) {
+                    bool found = false;
+                    for(auto& entry2 : _index.GetWordCount(word3)) {
+                        if(entry.doc_id == entry2.doc_id) {
+                            found = true;
+                        }
+                    }
+                    if(!found) {erase(entries_copy, entry);}
+                }
+            }
+        }
         if(!entries_copy.empty()) {
             vector<RelativeIndex> relative_indices;
             map<size_t, size_t> doc_id_absolut_rel;
