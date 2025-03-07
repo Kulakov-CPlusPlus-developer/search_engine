@@ -1,0 +1,8 @@
+{
+"config": {
+	"name": "TrainingEngine",
+	"version": "0.1",
+	"max_responses": 5
+	},
+"files": []
+}
