@@ -7,9 +7,12 @@
 #include "InvertedIndex.h"
 #include <set>
 #include <vector>
+#include "ConverterJSON.h"
 
 vector<vector<RelativeIndex>> SearchServer::search(const vector<string>& queries_input) {
     vector<vector<RelativeIndex>> results;
+    ConverterJSON convert;
+    vector<vector<std::pair<int, float>>>answers;
 
     for (auto& query : queries_input) {
         stringstream ss(query);
@@ -83,6 +86,8 @@ vector<vector<RelativeIndex>> SearchServer::search(const vector<string>& queries
                 else {
                     relative_relevance = 0.0f;
                 }
+
+
                 relative_indices.push_back({doc_id, relative_relevance});
             }
 
@@ -95,9 +100,19 @@ vector<vector<RelativeIndex>> SearchServer::search(const vector<string>& queries
                     return a.doc_id < b.doc_id;
                 }
             });
-
+            int count = convert.GetResponsesLimit();
+            while(relative_indices.size() > count) {
+                relative_indices.pop_back();
+            }
             results.push_back(relative_indices);
+            for(auto& buffer1 : results) {
+                for(auto& buffer2 : buffer1) {
+                    answers.push_back({pair<int, float>(buffer2.doc_id, buffer2.rank)});
+                }
+            }
         }
     }
+
+    convert.putAnswers(answers);
     return results;
 }
