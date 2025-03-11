@@ -50,11 +50,11 @@ This C++ project implements a basic search engine. It's designed to index and se
     ```
 
 ## Usage
-
-1.  **Configure the search engine:** Edit the `config.json` file to point to your document files.
-2.  **Specify search requests:**  Edit the `requests.json` file to define your search queries.
-3.  **Run the executable:** Execute the compiled binary. The executable name may vary depending on your platform and build configuration. It might be something like `search_engine` or `search_engine.exe`.
-4.  **View results:** The results are written to the `answers.json` file.
+1.  Place your document files in the `data` directory.
+2.  **Configure the search engine:** Edit the `config.json` file to point to your document files.
+3.  **Specify search requests:**  Edit the `requests.json` file to define your search queries.
+4.  **Run the executable:** Execute the compiled binary `search_engine.exe`.
+5.  **View results:** The results are written to the `answers.json` file.
 
 ## Configuration Files
 
@@ -70,8 +70,8 @@ The search engine uses two JSON configuration files:
     "max_responses": 5
   },
   "files": [
-    "path/to/document1.txt",
-    "path/to/document2.txt"
+    "../data/document1.txt",
+    "../data/document2.txt"
   ]
 }
 ```
@@ -121,13 +121,10 @@ The search engine uses two JSON configuration files:
 - result: true if any results were found, false otherwise.
 - relevance: An array of objects, each containing a docid (the ID of the document) and a rank (the relevance score).
 ## Testing
-- Delete main.cpp from add_executable
+
 - To run the unit tests, use the following command:
 ```
-./search_engine.exe
+./search_engine_test.exe
 ```
 
 All tests should pass for the project to be considered functional.
-
-## Contributing
-Contributions are welcome!
