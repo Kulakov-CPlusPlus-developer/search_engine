@@ -1,0 +1,14 @@
+{
+  "config": {
+    "name": "My Search Engine",
+    "version": "1.0",
+    "max_responses": 3
+  },
+  "files": [
+    "data/file1.txt",
+    "data/file2.txt",
+    "data/file3.txt",
+    "data/file4.txt",
+    "data/file5.txt"
+  ]
+}
